@@ -13,3 +13,7 @@ output "sns_topic_name" {
 output "sns_topic_arn" {
   value = module.sns.topic_arn
 }
+
+output "scanner_role_arn" {
+  value = module.iam.role_arn
+}
