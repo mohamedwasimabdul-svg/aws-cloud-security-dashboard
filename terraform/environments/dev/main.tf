@@ -23,3 +23,11 @@ module "iam" {
   sns_topic_arn = module.sns.topic_arn
 }
 
+module "eventbridge" {
+
+  source = "../../modules/eventbridge"
+
+  rule_name = "${var.project_name}-${var.environment}-daily-security-scan"
+
+  schedule_expression = "rate(1 day)"
+}

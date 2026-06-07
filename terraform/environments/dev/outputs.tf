@@ -17,3 +17,11 @@ output "sns_topic_arn" {
 output "scanner_role_arn" {
   value = module.iam.role_arn
 }
+
+output "eventbridge_rule_name" {
+  value = module.eventbridge.eventbridge_rule_name
+}
+
+output "eventbridge_rule_arn" {
+  value = module.eventbridge.eventbridge_rule_arn
+}
