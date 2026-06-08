@@ -10,6 +10,18 @@ resource "aws_dynamodb_table" "security_findings" {
     type = "S"
   }
 
+  attribute {
+  name = "severity"
+  type = "S"
+  }
+
+  global_secondary_index {
+
+  name            = "SeverityIndex"
+  hash_key        = "severity"
+  projection_type = "ALL"
+  }
+
   point_in_time_recovery {
     enabled = true
   }
