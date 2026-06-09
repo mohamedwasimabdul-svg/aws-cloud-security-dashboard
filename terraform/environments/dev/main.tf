@@ -45,4 +45,6 @@ module "lambda" {
   eventbridge_rule_arn = module.eventbridge.eventbridge_rule_arn
 
   eventbridge_rule_name = module.eventbridge.eventbridge_rule_name
+
+  findings_table_name = module.dynamodb.table_name
 }

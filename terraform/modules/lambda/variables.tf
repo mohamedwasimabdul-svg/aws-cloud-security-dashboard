@@ -17,3 +17,7 @@ variable "eventbridge_rule_arn" {
 variable "eventbridge_rule_name" {
   type = string
 }
+
+variable "findings_table_name" {
+  type = string
+}

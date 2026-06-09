@@ -26,6 +26,12 @@ resource "aws_lambda_function" "scanner" {
   timeout = 30
 
   memory_size = 256
+
+  environment {
+    variables = {
+      FINDINGS_TABLE = var.findings_table_name
+    }
+  }
 }
 
 resource "aws_lambda_permission" "allow_eventbridge" {
