@@ -34,7 +34,10 @@ resource "aws_iam_policy" "scanner_policy" {
         Action = [
           "iam:ListUsers",
           "iam:ListAccessKeys",
-          "iam:GetAccessKeyLastUsed"
+          "iam:GetAccessKeyLastUsed",
+          "iam:GetLoginProfile",
+          "iam:ListAttachedUserPolicies",
+          "iam:GetUser"
         ]
 
         Resource = "*"
@@ -57,7 +60,9 @@ resource "aws_iam_policy" "scanner_policy" {
         Action = [
           "s3:ListAllMyBuckets",
           "s3:GetBucketEncryption",
-          "s3:GetBucketVersioning"
+          "s3:GetBucketVersioning",
+          "s3:GetBucketPolicyStatus",
+          "s3:GetPublicAccessBlock
         ]
 
         Resource = "*"
