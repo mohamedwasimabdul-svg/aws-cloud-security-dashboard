@@ -21,3 +21,7 @@ variable "eventbridge_rule_name" {
 variable "findings_table_name" {
   type = string
 }
+
+variable "sns_topic_arn" {
+  type = string
+}

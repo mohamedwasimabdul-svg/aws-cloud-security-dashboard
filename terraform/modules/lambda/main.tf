@@ -30,6 +30,7 @@ resource "aws_lambda_function" "scanner" {
   environment {
     variables = {
       FINDINGS_TABLE = var.findings_table_name
+      SNS_TOPIC_ARN = var.sns_topic_arn
     }
   }
 }

@@ -10,6 +10,8 @@ module "sns" {
   source = "../../modules/sns"
 
   topic_name = "${var.project_name}-${var.environment}-alerts"
+
+  email_address = "mohamedwasimabdul@gmail.com"
 }
 
 module "iam" {
@@ -47,4 +49,6 @@ module "lambda" {
   eventbridge_rule_name = module.eventbridge.eventbridge_rule_name
 
   findings_table_name = module.dynamodb.table_name
+
+  sns_topic_arn = module.sns.topic_arn
 }
