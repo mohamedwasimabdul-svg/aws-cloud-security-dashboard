@@ -9,3 +9,11 @@ variable "role_arn" {
 variable "lambda_zip_path" {
   type = string
 }
+
+variable "eventbridge_rule_arn" {
+  type = string
+}
+
+variable "eventbridge_rule_name" {
+  type = string
+}

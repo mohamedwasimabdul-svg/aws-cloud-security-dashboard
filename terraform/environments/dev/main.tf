@@ -41,4 +41,8 @@ module "lambda" {
   role_arn = module.iam.role_arn
 
   lambda_zip_path = "../../../backend/lambda.zip"
+
+  eventbridge_rule_arn = module.eventbridge.eventbridge_rule_arn
+
+  eventbridge_rule_name = module.eventbridge.eventbridge_rule_name
 }

@@ -27,3 +27,23 @@ resource "aws_lambda_function" "scanner" {
 
   memory_size = 256
 }
+
+resource "aws_lambda_permission" "allow_eventbridge" {
+
+  statement_id = "AllowExecutionFromEventBridge"
+
+  action = "lambda:InvokeFunction"
+
+  function_name = aws_lambda_function.scanner.function_name
+
+  principal = "events.amazonaws.com"
+
+  source_arn = var.eventbridge_rule_arn
+}
+
+resource "aws_cloudwatch_event_target" "scanner_target" {
+
+  rule = var.eventbridge_rule_name
+
+  arn = aws_lambda_function.scanner.arn
+}
