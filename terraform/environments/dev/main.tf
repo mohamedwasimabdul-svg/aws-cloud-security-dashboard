@@ -31,3 +31,14 @@ module "eventbridge" {
 
   schedule_expression = "rate(1 day)"
 }
+
+module "lambda" {
+
+  source = "../../modules/lambda"
+
+  function_name = "${var.project_name}-${var.environment}-scanner"
+
+  role_arn = module.iam.role_arn
+
+  lambda_zip_path = "../../../backend/lambda.zip"
+}

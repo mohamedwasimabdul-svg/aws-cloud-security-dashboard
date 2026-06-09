@@ -11,15 +11,15 @@ resource "aws_dynamodb_table" "security_findings" {
   }
 
   attribute {
-  name = "severity"
-  type = "S"
+    name = "severity"
+    type = "S"
   }
 
   global_secondary_index {
 
-  name            = "SeverityIndex"
-  hash_key        = "severity"
-  projection_type = "ALL"
+    name            = "SeverityIndex"
+    hash_key        = "severity"
+    projection_type = "ALL"
   }
 
   point_in_time_recovery {
