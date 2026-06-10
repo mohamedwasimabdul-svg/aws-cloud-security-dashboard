@@ -1,32 +1,31 @@
 import { useEffect, useState } from "react";
 
 import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 
-import Header from "../components/Header";
 import MetricCard from "../components/MetricCard";
 import FindingsTable from "../components/FindingsTable";
+import Header from "../components/Header";
+
 import SeverityChart from "../components/charts/SeverityChart";
+import ResourceChart from "../components/charts/ResourceChart";
 
 import {
   getSummary,
   getFindings
 } from "../api/securityApi";
 
-import type {
-  Summary,
-  Finding
-} from "../types/security";
-
 function Dashboard() {
 
-  const [summary, setSummary] =
-    useState<Summary | null>(null);
+  const [summary, setSummary] = useState<any>(null);
 
   const [findings, setFindings] =
-    useState<Finding[]>([]);
+    useState<any[]>([]);
+
+  const [resourceStats,
+    setResourceStats] =
+    useState<any[]>([]);
 
   const loadData = async () => {
 
@@ -46,7 +45,7 @@ function Dashboard() {
       };
 
       findingsData.sort(
-        (a: Finding, b: Finding) =>
+        (a: any, b: any) =>
           severityRank[
             a.severity as keyof typeof severityRank
           ] -
@@ -55,13 +54,36 @@ function Dashboard() {
           ]
       );
 
+      const resourceData = Object.entries(
+        findingsData.reduce(
+          (acc: any, finding: any) => {
+
+            const resource =
+              finding.resource_type;
+
+            acc[resource] =
+              (acc[resource] || 0) + 1;
+
+            return acc;
+
+          },
+          {}
+        )
+      ).map(
+        ([resource, count]) => ({
+          resource,
+          count
+        })
+      );
+
       setSummary(summaryData);
       setFindings(findingsData);
+      setResourceStats(resourceData);
 
     } catch (error) {
 
       console.error(
-        "Failed to load dashboard data",
+        "Failed loading dashboard:",
         error
       );
 
@@ -72,10 +94,11 @@ function Dashboard() {
 
     loadData();
 
-    const interval = setInterval(
-      loadData,
-      30000
-    );
+    const interval =
+      setInterval(
+        loadData,
+        30000
+      );
 
     return () =>
       clearInterval(interval);
@@ -85,22 +108,20 @@ function Dashboard() {
   if (!summary) {
 
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <CircularProgress />
-      </Box>
+      <Container>
+        <Typography>
+          Loading...
+        </Typography>
+      </Container>
     );
+
   }
 
   return (
 
     <Container
       maxWidth="xl"
-      sx={{ mt: 4, mb: 4 }}
+      sx={{ mt: 4, mb: 6 }}
     >
 
       <Header />
@@ -110,68 +131,101 @@ function Dashboard() {
         spacing={3}
       >
 
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <MetricCard
             title="Security Score"
-            value={summary.compliance_score}
+            value={
+              summary.compliance_score
+            }
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <MetricCard
             title="Critical"
             value={summary.critical}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <MetricCard
             title="High"
             value={summary.high}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 3 }}>
-          <MetricCard
-            title="Total Findings"
-            value={summary.total_findings}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <MetricCard
             title="Medium"
             value={summary.medium}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <MetricCard
             title="Low"
             value={summary.low}
           />
         </Grid>
 
+        <Grid size={{ xs: 12, md: 2 }}>
+          <MetricCard
+            title="Findings"
+            value={
+              summary.total_findings
+            }
+          />
+        </Grid>
+
       </Grid>
 
-      <Box sx={{ mt: 5 }}>
+      <Typography
+        variant="h5"
+        sx={{
+          mt: 5,
+          mb: 2,
+          fontWeight: "bold"
+        }}
+      >
+        Severity Distribution
+      </Typography>
 
-        <SeverityChart
-          critical={summary.critical}
-          high={summary.high}
-          medium={summary.medium}
-          low={summary.low}
-        />
+      <SeverityChart
+        critical={summary.critical}
+        high={summary.high}
+        medium={summary.medium}
+        low={summary.low}
+      />
 
-      </Box>
+      <Typography
+        variant="h5"
+        sx={{
+          mt: 5,
+          mb: 2,
+          fontWeight: "bold"
+        }}
+      >
+        Findings by Resource Type
+      </Typography>
 
-      <Box sx={{ mt: 5 }}>
+      <ResourceChart
+        data={resourceStats}
+      />
 
-        <FindingsTable
-          findings={findings}
-        />
+      <Typography
+        variant="h5"
+        sx={{
+          mt: 5,
+          mb: 2,
+          fontWeight: "bold"
+        }}
+      >
+        Recent Findings
+      </Typography>
 
-      </Box>
+      <FindingsTable
+        findings={findings}
+      />
 
     </Container>
 
