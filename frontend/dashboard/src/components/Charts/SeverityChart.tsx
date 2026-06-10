@@ -50,7 +50,7 @@ function SeverityChart({
 
     <ResponsiveContainer
       width="100%"
-      height={300}
+      height={260}
     >
 
       <PieChart>

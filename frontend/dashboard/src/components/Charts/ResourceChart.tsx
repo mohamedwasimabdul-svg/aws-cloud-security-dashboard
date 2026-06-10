@@ -4,10 +4,8 @@ import {
   Bar,
   XAxis,
   YAxis,
-  Tooltip
-} from "recharts";
-
-import {
+  Tooltip,
+  CartesianGrid,
   LabelList
 } from "recharts";
 
@@ -21,29 +19,54 @@ function ResourceChart({ data }: Props) {
 
     <ResponsiveContainer
       width="100%"
-      height={300}
+      height={320}
     >
 
-      <BarChart data={data}>
+      <BarChart
+        data={data}
+        margin={{
+          top: 25,
+          right: 20,
+          left: 0,
+          bottom: 10
+        }}
+      >
+
+        <CartesianGrid
+          strokeDasharray="3 3"
+          opacity={0.3}
+        />
 
         <XAxis
           dataKey="resource"
+          tick={{
+            fontSize: 12
+          }}
         />
 
-        <YAxis />
+        <YAxis
+          allowDecimals={false}
+        />
 
-        <Tooltip />
+        <Tooltip
+          contentStyle={{
+            borderRadius: "10px",
+            border: "none"
+          }}
+        />
 
         <Bar
           dataKey="count"
-          fill="#0876e4"
-          radius={[8,8,0,0]}
+          fill="#2196f3"
+          radius={[8, 8, 0, 0]}
         >
-        <LabelList
-          dataKey="count"
-          position="top"
-        />
-       </Bar>
+
+          <LabelList
+            dataKey="count"
+            position="top"
+          />
+
+        </Bar>
 
       </BarChart>
 

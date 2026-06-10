@@ -46,32 +46,35 @@ function FindingsTable({
 
     <TableContainer
       component={Paper}
-      sx={{ mt: 2 }}
+      sx={{
+        maxHeight: 500,
+        borderRadius: 2
+      }}
     >
 
-      <Table>
+      <Table stickyHeader>
 
         <TableHead>
 
           <TableRow>
 
-            <TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>
               Severity
             </TableCell>
 
-            <TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>
               Resource Type
             </TableCell>
 
-            <TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>
               Resource ID
             </TableCell>
 
-            <TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>
               Title
             </TableCell>
 
-            <TableCell>
+            <TableCell sx={{ fontWeight: "bold" }}>
               Description
             </TableCell>
 
@@ -85,19 +88,18 @@ function FindingsTable({
             (finding) => (
 
               <TableRow
+                hover
                 key={finding.finding_id}
               >
 
                 <TableCell>
 
                   <Chip
-                    label={
-                      finding.severity
-                    }
+                    label={finding.severity}
+                    size="small"
                     sx={{
                       color: "white",
-                      fontWeight:
-                        "bold",
+                      fontWeight: "bold",
                       backgroundColor:
                         getSeverityColor(
                           finding.severity
@@ -108,27 +110,23 @@ function FindingsTable({
                 </TableCell>
 
                 <TableCell>
-                  {
-                    finding.resource_type
-                  }
+                  {finding.resource_type}
                 </TableCell>
 
                 <TableCell>
-                  {
-                    finding.resource_id
-                  }
+                  {finding.resource_id}
                 </TableCell>
 
                 <TableCell>
-                  {
-                    finding.title
-                  }
+                  {finding.title}
                 </TableCell>
 
-                <TableCell>
-                  {
-                    finding.description
-                  }
+                <TableCell
+                  sx={{
+                    maxWidth: 400
+                  }}
+                >
+                  {finding.description}
                 </TableCell>
 
               </TableRow>

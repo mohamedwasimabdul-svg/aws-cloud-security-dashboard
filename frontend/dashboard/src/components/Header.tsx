@@ -1,19 +1,43 @@
-import Typography
-from "@mui/material/Typography";
+import {
+  Box,
+  Typography
+} from "@mui/material";
 
 function Header() {
 
   return (
 
-    <Typography
-      variant="h3"
+    <Box
       sx={{
-        mb: 4,
-        fontWeight: "bold"
+        mb: 5,
+        textAlign: "center"
       }}
     >
-      Cloud Security Dashboard
-    </Typography>
+
+      <Typography
+        variant="h2"
+        fontWeight="bold"
+      >
+        Cloud Security Dashboard
+      </Typography>
+
+      <Typography
+        variant="body1"
+        color="text.secondary"
+      >
+        Real-Time AWS Security Monitoring
+      </Typography>
+
+      <Typography
+        variant="body2"
+        color="text.secondary"
+      >
+        Last Updated:
+        {" "}
+        {new Date().toLocaleString()}
+      </Typography>
+
+    </Box>
 
   );
 }

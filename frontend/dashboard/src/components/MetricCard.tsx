@@ -1,25 +1,49 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
+import {
+  Card,
+  CardContent,
+  Typography
+} from "@mui/material";
 
 interface Props {
   title: string;
   value: string | number;
 }
 
-function MetricCard({ title, value }: Props) {
+function MetricCard({
+  title,
+  value
+}: Props) {
+
   return (
-    <Card>
+
+    <Card
+      sx={{
+        height: "100%",
+        borderRadius: 3,
+        textAlign: "center"
+      }}
+    >
+
       <CardContent>
-        <Typography variant="h6">
+
+        <Typography
+          color="text.secondary"
+          gutterBottom
+        >
           {title}
         </Typography>
 
-        <Typography variant="h4">
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+        >
           {value}
         </Typography>
+
       </CardContent>
+
     </Card>
+
   );
 }
 

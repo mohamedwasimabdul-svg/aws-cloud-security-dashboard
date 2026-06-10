@@ -8,7 +8,8 @@ import {
   Select,
   MenuItem,
   TextField,
-  Box
+  Box,
+  Typography
 } from "@mui/material";
 
 import Header from "../components/Header";
@@ -27,7 +28,8 @@ import {
 
 function Dashboard() {
 
-  const [summary, setSummary] = useState<any>(null);
+  const [summary, setSummary] =
+    useState<any>(null);
 
   const [findings, setFindings] =
     useState<any[]>([]);
@@ -42,6 +44,10 @@ function Dashboard() {
 
   const [searchText,
     setSearchText] =
+    useState("");
+
+  const [lastUpdated,
+    setLastUpdated] =
     useState("");
 
   const loadData = async () => {
@@ -73,7 +79,6 @@ function Dashboard() {
 
       const resourceData =
         Object.entries(
-
           findingsData.reduce(
             (
               acc: any,
@@ -91,7 +96,6 @@ function Dashboard() {
             },
             {}
           )
-
         ).map(
           ([resource, count]) => ({
             resource,
@@ -102,6 +106,11 @@ function Dashboard() {
       setSummary(summaryData);
       setFindings(findingsData);
       setResourceStats(resourceData);
+
+      setLastUpdated(
+        new Date()
+          .toLocaleString()
+      );
 
     } catch (error) {
 
@@ -181,11 +190,22 @@ function Dashboard() {
       maxWidth="xl"
       sx={{
         mt: 4,
-        mb: 6
+        mb: 8
       }}
     >
 
       <Header />
+
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        sx={{
+          mb: 4,
+          textAlign: "center"
+        }}
+      >
+        Last Updated: {lastUpdated}
+      </Typography>
 
       {/* TOP ROW */}
 
@@ -197,7 +217,7 @@ function Dashboard() {
         <Grid
           item
           xs={12}
-          md={4}
+          md={3}
         >
 
           <DashboardSection
@@ -217,7 +237,7 @@ function Dashboard() {
         <Grid
           item
           xs={12}
-          md={8}
+          md={9}
         >
 
           <DashboardSection
@@ -252,32 +272,32 @@ function Dashboard() {
         spacing={3}
         sx={{
           mt: 2,
-          mb: 4
+          mb: 6
         }}
       >
 
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} sm={6} md={2}>
           <MetricCard
             title="Critical"
             value={summary.critical}
           />
         </Grid>
 
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} sm={6} md={2}>
           <MetricCard
             title="High"
             value={summary.high}
           />
         </Grid>
 
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} sm={6} md={2}>
           <MetricCard
             title="Medium"
             value={summary.medium}
           />
         </Grid>
 
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} sm={6} md={2}>
           <MetricCard
             title="Low"
             value={summary.low}
@@ -297,7 +317,7 @@ function Dashboard() {
 
       {/* RESOURCE CHART */}
 
-      <Box sx={{ mt: 5 }}>
+      <Box sx={{ mt: 6 }}>
 
         <DashboardSection
           title="Findings by Resource Type"
@@ -313,7 +333,7 @@ function Dashboard() {
 
       {/* FINDINGS TABLE */}
 
-      <Box sx={{ mt: 4 }}>
+      <Box sx={{ mt: 5 }}>
 
         <DashboardSection
           title="Recent Findings"
@@ -323,7 +343,8 @@ function Dashboard() {
             sx={{
               display: "flex",
               gap: 2,
-              mb: 3
+              mb: 3,
+              flexWrap: "wrap"
             }}
           >
 
@@ -336,6 +357,10 @@ function Dashboard() {
                   e.target.value
                 )
               }
+              sx={{
+                flex: 1,
+                minWidth: 300
+              }}
             />
 
             <FormControl

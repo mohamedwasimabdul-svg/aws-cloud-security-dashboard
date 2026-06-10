@@ -1,6 +1,7 @@
 import {
   Paper,
-  Typography
+  Typography,
+  Box
 } from "@mui/material";
 
 interface Props {
@@ -14,23 +15,39 @@ function DashboardSection({
 }: Props) {
 
   return (
+
     <Paper
-      elevation={3}
+      elevation={4}
       sx={{
         p: 3,
-        mb: 3,
-        borderRadius: 3
+        mb: 4,
+        borderRadius: 4,
+        overflow: "hidden",
+        transition: "all 0.2s ease-in-out",
+
+        "&:hover": {
+          transform: "translateY(-2px)",
+          boxShadow: 8
+        }
       }}
     >
+
       <Typography
         variant="h5"
-        sx={{ mb: 2 }}
+        fontWeight="bold"
+        sx={{
+          mb: 3
+        }}
       >
         {title}
       </Typography>
 
-      {children}
+      <Box>
+        {children}
+      </Box>
+
     </Paper>
+
   );
 }
 
