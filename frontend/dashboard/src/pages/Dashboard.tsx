@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 
-import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 
+import Header from "../components/Header";
 import MetricCard from "../components/MetricCard";
 import FindingsTable from "../components/FindingsTable";
-import Header from "../components/Header";
+import SeverityChart from "../components/charts/SeverityChart";
 
 import {
   getSummary,
@@ -64,6 +64,7 @@ function Dashboard() {
         "Failed to load dashboard data",
         error
       );
+
     }
   };
 
@@ -99,7 +100,7 @@ function Dashboard() {
 
     <Container
       maxWidth="xl"
-      sx={{ mt: 4 }}
+      sx={{ mt: 4, mb: 4 }}
     >
 
       <Header />
@@ -109,66 +110,71 @@ function Dashboard() {
         spacing={3}
       >
 
-        <Grid size={{ xs: 12, md: 2 }}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <MetricCard
             title="Security Score"
             value={summary.compliance_score}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 2 }}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <MetricCard
             title="Critical"
             value={summary.critical}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 2 }}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <MetricCard
             title="High"
             value={summary.high}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 2 }}>
-          <MetricCard
-            title="Medium"
-            value={summary.medium}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 2 }}>
-          <MetricCard
-            title="Low"
-            value={summary.low}
-          />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 2 }}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <MetricCard
             title="Total Findings"
             value={summary.total_findings}
           />
         </Grid>
 
+        <Grid size={{ xs: 12, md: 3 }}>
+          <MetricCard
+            title="Medium"
+            value={summary.medium}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <MetricCard
+            title="Low"
+            value={summary.low}
+          />
+        </Grid>
+
       </Grid>
 
-      <Typography
-        variant="h5"
-        sx={{
-          mt: 5,
-          mb: 2,
-          fontWeight: "bold"
-        }}
-      >
-        Recent Findings
-      </Typography>
+      <Box sx={{ mt: 5 }}>
 
-      <FindingsTable
-        findings={findings}
-      />
+        <SeverityChart
+          critical={summary.critical}
+          high={summary.high}
+          medium={summary.medium}
+          low={summary.low}
+        />
+
+      </Box>
+
+      <Box sx={{ mt: 5 }}>
+
+        <FindingsTable
+          findings={findings}
+        />
+
+      </Box>
 
     </Container>
+
   );
 }
 
