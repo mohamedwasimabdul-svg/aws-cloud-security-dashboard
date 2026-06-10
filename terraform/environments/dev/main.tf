@@ -52,3 +52,27 @@ module "lambda" {
 
   sns_topic_arn = module.sns.topic_arn
 }
+
+module "api_lambda" {
+
+  source = "../../modules/api_lambda"
+
+  function_name = "${var.project_name}-${var.environment}-api"
+
+  role_arn = module.iam.role_arn
+
+  lambda_zip_path = "../../../backend/api/api.zip"
+
+  findings_table_name = module.dynamodb.table_name
+}
+
+module "api_gateway" {
+
+  source = "../../modules/api_gateway"
+
+  api_name = "${var.project_name}-${var.environment}-api"
+
+  lambda_arn = module.api_lambda.lambda_arn
+
+  lambda_name = module.api_lambda.lambda_name
+}

@@ -33,3 +33,15 @@ output "lambda_name" {
 output "lambda_arn" {
   value = module.lambda.lambda_function_arn
 }
+
+output "api_lambda_name" {
+  value = module.api_lambda.lambda_name
+}
+
+output "api_lambda_arn" {
+  value = module.api_lambda.lambda_arn
+}
+
+output "api_url" {
+  value = module.api_gateway.invoke_url
+}

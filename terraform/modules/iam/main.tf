@@ -62,7 +62,7 @@ resource "aws_iam_policy" "scanner_policy" {
           "s3:GetBucketEncryption",
           "s3:GetBucketVersioning",
           "s3:GetBucketPolicyStatus",
-          "s3:GetPublicAccessBlock
+          "s3:GetPublicAccessBlock"
         ]
 
         Resource = "*"
