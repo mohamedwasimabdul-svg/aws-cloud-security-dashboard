@@ -35,7 +35,9 @@ function MetricCard({
 
         <Typography
           variant="h3"
-          fontWeight="bold"
+          sx={{
+            fontWeight: "bold"
+          }}
         >
           {value}
         </Typography>

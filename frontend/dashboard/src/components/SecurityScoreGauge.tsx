@@ -24,15 +24,20 @@ function SecurityScoreGauge({
   };
 
   return (
+
     <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+      }}
     >
 
       <Box
-        position="relative"
-        display="inline-flex"
+        sx={{
+          position: "relative",
+          display: "inline-flex"
+        }}
       >
 
         <CircularProgress
@@ -43,14 +48,16 @@ function SecurityScoreGauge({
         />
 
         <Box
-          position="absolute"
-          top={0}
-          left={0}
-          bottom={0}
-          right={0}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
         >
 
           <Typography
@@ -65,12 +72,15 @@ function SecurityScoreGauge({
 
       <Typography
         variant="h6"
-        sx={{ mt: 2 }}
+        sx={{
+          mt: 2
+        }}
       >
         Security Score
       </Typography>
 
     </Box>
+
   );
 }
 

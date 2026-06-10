@@ -108,8 +108,7 @@ function Dashboard() {
       setResourceStats(resourceData);
 
       setLastUpdated(
-        new Date()
-          .toLocaleString()
+        new Date().toLocaleString()
       );
 
     } catch (error) {
@@ -207,18 +206,12 @@ function Dashboard() {
         Last Updated: {lastUpdated}
       </Typography>
 
-      {/* TOP ROW */}
-
       <Grid
         container
         spacing={3}
       >
 
-        <Grid
-          item
-          xs={12}
-          md={3}
-        >
+        <Grid size={{ xs: 12, md: 3 }}>
 
           <DashboardSection
             title="Security Score"
@@ -234,29 +227,17 @@ function Dashboard() {
 
         </Grid>
 
-        <Grid
-          item
-          xs={12}
-          md={9}
-        >
+        <Grid size={{ xs: 12, md: 9 }}>
 
           <DashboardSection
             title="Severity Distribution"
           >
 
             <SeverityChart
-              critical={
-                summary.critical
-              }
-              high={
-                summary.high
-              }
-              medium={
-                summary.medium
-              }
-              low={
-                summary.low
-              }
+              critical={summary.critical}
+              high={summary.high}
+              medium={summary.medium}
+              low={summary.low}
             />
 
           </DashboardSection>
@@ -264,8 +245,6 @@ function Dashboard() {
         </Grid>
 
       </Grid>
-
-      {/* METRIC CARDS */}
 
       <Grid
         container
@@ -276,35 +255,35 @@ function Dashboard() {
         }}
       >
 
-        <Grid item xs={12} sm={6} md={2}>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <MetricCard
             title="Critical"
             value={summary.critical}
           />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={2}>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <MetricCard
             title="High"
             value={summary.high}
           />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={2}>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <MetricCard
             title="Medium"
             value={summary.medium}
           />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={2}>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <MetricCard
             title="Low"
             value={summary.low}
           />
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <MetricCard
             title="Total Findings"
             value={
@@ -314,8 +293,6 @@ function Dashboard() {
         </Grid>
 
       </Grid>
-
-      {/* RESOURCE CHART */}
 
       <Box sx={{ mt: 6 }}>
 
@@ -330,8 +307,6 @@ function Dashboard() {
         </DashboardSection>
 
       </Box>
-
-      {/* FINDINGS TABLE */}
 
       <Box sx={{ mt: 5 }}>
 
@@ -410,9 +385,7 @@ function Dashboard() {
           </Box>
 
           <FindingsTable
-            findings={
-              filteredFindings
-            }
+            findings={filteredFindings}
           />
 
         </DashboardSection>

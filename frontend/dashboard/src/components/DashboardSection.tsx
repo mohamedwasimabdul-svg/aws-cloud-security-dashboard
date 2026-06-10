@@ -34,8 +34,8 @@ function DashboardSection({
 
       <Typography
         variant="h5"
-        fontWeight="bold"
         sx={{
+          fontWeight: "bold",
           mb: 3
         }}
       >

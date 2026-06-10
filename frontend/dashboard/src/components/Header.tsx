@@ -16,7 +16,9 @@ function Header() {
 
       <Typography
         variant="h2"
-        fontWeight="bold"
+        sx={{
+          fontWeight: "bold"
+        }}
       >
         Cloud Security Dashboard
       </Typography>
@@ -32,8 +34,7 @@ function Header() {
         variant="body2"
         color="text.secondary"
       >
-        Last Updated:
-        {" "}
+        Last Updated{" "}
         {new Date().toLocaleString()}
       </Typography>
 
