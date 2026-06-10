@@ -3,23 +3,34 @@ import { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 import MetricCard from "../components/MetricCard";
 import FindingsTable from "../components/FindingsTable";
+import Header from "../components/Header";
 
 import {
   getSummary,
   getFindings
 } from "../api/securityApi";
 
+import type {
+  Summary,
+  Finding
+} from "../types/security";
+
 function Dashboard() {
 
-  const [summary, setSummary] = useState<any>(null);
-  const [findings, setFindings] = useState([]);
+  const [summary, setSummary] =
+    useState<Summary | null>(null);
 
-  useEffect(() => {
+  const [findings, setFindings] =
+    useState<Finding[]>([]);
 
-    const loadData = async () => {
+  const loadData = async () => {
+
+    try {
 
       const summaryData =
         await getSummary();
@@ -27,53 +38,113 @@ function Dashboard() {
       const findingsData =
         await getFindings();
 
+      const severityRank = {
+        CRITICAL: 1,
+        HIGH: 2,
+        MEDIUM: 3,
+        LOW: 4
+      };
+
+      findingsData.sort(
+        (a: Finding, b: Finding) =>
+          severityRank[
+            a.severity as keyof typeof severityRank
+          ] -
+          severityRank[
+            b.severity as keyof typeof severityRank
+          ]
+      );
+
       setSummary(summaryData);
       setFindings(findingsData);
-    };
+
+    } catch (error) {
+
+      console.error(
+        "Failed to load dashboard data",
+        error
+      );
+    }
+  };
+
+  useEffect(() => {
 
     loadData();
+
+    const interval = setInterval(
+      loadData,
+      30000
+    );
+
+    return () =>
+      clearInterval(interval);
 
   }, []);
 
   if (!summary) {
-    return <p>Loading...</p>;
+
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
 
-    <Container>
+    <Container
+      maxWidth="xl"
+      sx={{ mt: 4 }}
+    >
 
-      <Typography
-        variant="h3"
-        gutterBottom
+      <Header />
+
+      <Grid
+        container
+        spacing={3}
       >
-        Cloud Security Dashboard
-      </Typography>
 
-      <Grid container spacing={3}>
-
-        <Grid size={3}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <MetricCard
             title="Security Score"
             value={summary.compliance_score}
           />
         </Grid>
 
-        <Grid size={3}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <MetricCard
             title="Critical"
             value={summary.critical}
           />
         </Grid>
 
-        <Grid size={3}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <MetricCard
             title="High"
             value={summary.high}
           />
         </Grid>
 
-        <Grid size={3}>
+        <Grid size={{ xs: 12, md: 2 }}>
+          <MetricCard
+            title="Medium"
+            value={summary.medium}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 2 }}>
+          <MetricCard
+            title="Low"
+            value={summary.low}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 2 }}>
           <MetricCard
             title="Total Findings"
             value={summary.total_findings}
@@ -84,7 +155,11 @@ function Dashboard() {
 
       <Typography
         variant="h5"
-        sx={{ mt: 4 }}
+        sx={{
+          mt: 5,
+          mb: 2,
+          fontWeight: "bold"
+        }}
       >
         Recent Findings
       </Typography>

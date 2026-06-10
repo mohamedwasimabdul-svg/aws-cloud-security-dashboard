@@ -3,7 +3,10 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  TableBody
+  TableBody,
+  Paper,
+  TableContainer,
+  Chip
 } from "@mui/material";
 
 import type { Finding } from "../types/security";
@@ -12,44 +15,133 @@ interface Props {
   findings: Finding[];
 }
 
-function FindingsTable({ findings }: Props) {
+const getSeverityColor = (
+  severity: string
+) => {
+
+  switch (severity) {
+
+    case "CRITICAL":
+      return "#d32f2f";
+
+    case "HIGH":
+      return "#f57c00";
+
+    case "MEDIUM":
+      return "#fbc02d";
+
+    case "LOW":
+      return "#388e3c";
+
+    default:
+      return "#757575";
+  }
+};
+
+function FindingsTable({
+  findings
+}: Props) {
 
   return (
-    <Table>
 
-      <TableHead>
-        <TableRow>
-          <TableCell>Severity</TableCell>
-          <TableCell>Resource</TableCell>
-          <TableCell>Title</TableCell>
-        </TableRow>
-      </TableHead>
+    <TableContainer
+      component={Paper}
+      sx={{ mt: 2 }}
+    >
 
-      <TableBody>
+      <Table>
 
-        {findings.map((finding) => (
+        <TableHead>
 
-          <TableRow key={finding.finding_id}>
+          <TableRow>
 
             <TableCell>
-              {finding.severity}
+              Severity
             </TableCell>
 
             <TableCell>
-              {finding.resource_type}
+              Resource Type
             </TableCell>
 
             <TableCell>
-              {finding.title}
+              Resource ID
+            </TableCell>
+
+            <TableCell>
+              Title
+            </TableCell>
+
+            <TableCell>
+              Description
             </TableCell>
 
           </TableRow>
 
-        ))}
+        </TableHead>
 
-      </TableBody>
+        <TableBody>
 
-    </Table>
+          {findings.map(
+            (finding) => (
+
+              <TableRow
+                key={finding.finding_id}
+              >
+
+                <TableCell>
+
+                  <Chip
+                    label={
+                      finding.severity
+                    }
+                    sx={{
+                      color: "white",
+                      fontWeight:
+                        "bold",
+                      backgroundColor:
+                        getSeverityColor(
+                          finding.severity
+                        )
+                    }}
+                  />
+
+                </TableCell>
+
+                <TableCell>
+                  {
+                    finding.resource_type
+                  }
+                </TableCell>
+
+                <TableCell>
+                  {
+                    finding.resource_id
+                  }
+                </TableCell>
+
+                <TableCell>
+                  {
+                    finding.title
+                  }
+                </TableCell>
+
+                <TableCell>
+                  {
+                    finding.description
+                  }
+                </TableCell>
+
+              </TableRow>
+
+            )
+          )}
+
+        </TableBody>
+
+      </Table>
+
+    </TableContainer>
+
   );
 }
 
