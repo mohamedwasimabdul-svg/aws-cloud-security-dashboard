@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
 
 import MetricCard from "../components/MetricCard";
 import FindingsTable from "../components/FindingsTable";
 import Header from "../components/Header";
+import SecurityScoreGauge from "../components/SecurityScoreGauge";
 
 import SeverityChart from "../components/charts/SeverityChart";
 import ResourceChart from "../components/charts/ResourceChart";
@@ -23,8 +25,7 @@ function Dashboard() {
   const [findings, setFindings] =
     useState<any[]>([]);
 
-  const [resourceStats,
-    setResourceStats] =
+  const [resourceStats, setResourceStats] =
     useState<any[]>([]);
 
   const loadData = async () => {
@@ -69,12 +70,10 @@ function Dashboard() {
           },
           {}
         )
-      ).map(
-        ([resource, count]) => ({
-          resource,
-          count
-        })
-      );
+      ).map(([resource, count]) => ({
+        resource,
+        count
+      }));
 
       setSummary(summaryData);
       setFindings(findingsData);
@@ -82,10 +81,7 @@ function Dashboard() {
 
     } catch (error) {
 
-      console.error(
-        "Failed loading dashboard:",
-        error
-      );
+      console.error(error);
 
     }
   };
@@ -126,106 +122,166 @@ function Dashboard() {
 
       <Header />
 
+      <Typography
+        variant="body2"
+        sx={{ mb: 3 }}
+      >
+        Last Updated:
+        {" "}
+        {new Date().toLocaleString()}
+      </Typography>
+
+      {/* Top Dashboard Row */}
+
       <Grid
         container
         spacing={3}
       >
 
-        <Grid size={{ xs: 12, md: 2 }}>
-          <MetricCard
-            title="Security Score"
-            value={
-              summary.compliance_score
-            }
-          />
+        <Grid
+          item
+          xs={12}
+          md={4}
+        >
+
+          <Paper
+            sx={{
+              p: 3,
+              height: "100%"
+            }}
+          >
+
+            <SecurityScoreGauge
+              score={
+                summary.compliance_score
+              }
+            />
+
+          </Paper>
+
         </Grid>
 
-        <Grid size={{ xs: 12, md: 2 }}>
+        <Grid
+          item
+          xs={12}
+          md={8}
+        >
+
+          <Paper
+            sx={{
+              p: 2
+            }}
+          >
+
+            <Typography
+              variant="h6"
+              gutterBottom
+            >
+              Severity Distribution
+            </Typography>
+
+            <SeverityChart
+              critical={
+                summary.critical
+              }
+              high={
+                summary.high
+              }
+              medium={
+                summary.medium
+              }
+              low={
+                summary.low
+              }
+            />
+
+          </Paper>
+
+        </Grid>
+
+      </Grid>
+
+      {/* Summary Cards */}
+
+      <Grid
+        container
+        spacing={3}
+        sx={{ mt: 1 }}
+      >
+
+        <Grid item xs={12} md={3}>
           <MetricCard
             title="Critical"
             value={summary.critical}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 2 }}>
+        <Grid item xs={12} md={3}>
           <MetricCard
             title="High"
             value={summary.high}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 2 }}>
+        <Grid item xs={12} md={3}>
           <MetricCard
             title="Medium"
             value={summary.medium}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 2 }}>
+        <Grid item xs={12} md={3}>
           <MetricCard
             title="Low"
             value={summary.low}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 2 }}>
-          <MetricCard
-            title="Findings"
-            value={
-              summary.total_findings
-            }
-          />
-        </Grid>
-
       </Grid>
 
-      <Typography
-        variant="h5"
+      {/* Resource Analytics */}
+
+      <Paper
         sx={{
-          mt: 5,
-          mb: 2,
-          fontWeight: "bold"
+          mt: 4,
+          p: 2
         }}
       >
-        Severity Distribution
-      </Typography>
 
-      <SeverityChart
-        critical={summary.critical}
-        high={summary.high}
-        medium={summary.medium}
-        low={summary.low}
-      />
+        <Typography
+          variant="h6"
+          gutterBottom
+        >
+          Findings by Resource Type
+        </Typography>
 
-      <Typography
-        variant="h5"
+        <ResourceChart
+          data={resourceStats}
+        />
+
+      </Paper>
+
+      {/* Findings Table */}
+
+      <Paper
         sx={{
-          mt: 5,
-          mb: 2,
-          fontWeight: "bold"
+          mt: 4,
+          p: 2
         }}
       >
-        Findings by Resource Type
-      </Typography>
 
-      <ResourceChart
-        data={resourceStats}
-      />
+        <Typography
+          variant="h6"
+          gutterBottom
+        >
+          Recent Findings
+        </Typography>
 
-      <Typography
-        variant="h5"
-        sx={{
-          mt: 5,
-          mb: 2,
-          fontWeight: "bold"
-        }}
-      >
-        Recent Findings
-      </Typography>
+        <FindingsTable
+          findings={findings}
+        />
 
-      <FindingsTable
-        findings={findings}
-      />
+      </Paper>
 
     </Container>
 
