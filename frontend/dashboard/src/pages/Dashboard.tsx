@@ -1,64 +1,99 @@
 import { useEffect, useState } from "react";
-import { getSummary } from "../api/securityApi";
+
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+
+import MetricCard from "../components/MetricCard";
+import FindingsTable from "../components/FindingsTable";
+
+import {
+  getSummary,
+  getFindings
+} from "../api/securityApi";
 
 function Dashboard() {
 
   const [summary, setSummary] = useState<any>(null);
+  const [findings, setFindings] = useState([]);
 
   useEffect(() => {
 
     const loadData = async () => {
 
-      try {
-        const data = await getSummary();
-        setSummary(data);
-      } catch (error) {
-        console.error(error);
-      }
+      const summaryData =
+        await getSummary();
+
+      const findingsData =
+        await getFindings();
+
+      setSummary(summaryData);
+      setFindings(findingsData);
     };
 
     loadData();
 
   }, []);
 
+  if (!summary) {
+    return <p>Loading...</p>;
+  }
+
   return (
-    <div>
 
-      <h1>Cloud Security Dashboard</h1>
+    <Container>
 
-      {!summary ? (
-        <p>Loading...</p>
-      ) : (
-        <div>
+      <Typography
+        variant="h3"
+        gutterBottom
+      >
+        Cloud Security Dashboard
+      </Typography>
 
-          <h2>
-            Security Score:
-            {" "}
-            {summary.compliance_score}
-          </h2>
+      <Grid container spacing={3}>
 
-          <p>
-            Total Findings:
-            {" "}
-            {summary.total_findings}
-          </p>
+        <Grid size={3}>
+          <MetricCard
+            title="Security Score"
+            value={summary.compliance_score}
+          />
+        </Grid>
 
-          <p>
-            Critical:
-            {" "}
-            {summary.critical}
-          </p>
+        <Grid size={3}>
+          <MetricCard
+            title="Critical"
+            value={summary.critical}
+          />
+        </Grid>
 
-          <p>
-            High:
-            {" "}
-            {summary.high}
-          </p>
+        <Grid size={3}>
+          <MetricCard
+            title="High"
+            value={summary.high}
+          />
+        </Grid>
 
-        </div>
-      )}
+        <Grid size={3}>
+          <MetricCard
+            title="Total Findings"
+            value={summary.total_findings}
+          />
+        </Grid>
 
-    </div>
+      </Grid>
+
+      <Typography
+        variant="h5"
+        sx={{ mt: 4 }}
+      >
+        Recent Findings
+      </Typography>
+
+      <FindingsTable
+        findings={findings}
+      />
+
+    </Container>
   );
 }
 
