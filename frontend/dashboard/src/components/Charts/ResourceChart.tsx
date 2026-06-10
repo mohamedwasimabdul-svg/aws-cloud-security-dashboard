@@ -7,6 +7,10 @@ import {
   Tooltip
 } from "recharts";
 
+import {
+  LabelList
+} from "recharts";
+
 interface Props {
   data: any[];
 }
@@ -32,8 +36,14 @@ function ResourceChart({ data }: Props) {
 
         <Bar
           dataKey="count"
-          radius={[6,6,0,0]}
+          fill="#0876e4"
+          radius={[8,8,0,0]}
+        >
+        <LabelList
+          dataKey="count"
+          position="top"
         />
+       </Bar>
 
       </BarChart>
 

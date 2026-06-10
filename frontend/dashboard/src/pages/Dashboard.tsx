@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
+import {
+  Container,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  Box
+} from "@mui/material";
 
+import Header from "../components/Header";
 import MetricCard from "../components/MetricCard";
 import FindingsTable from "../components/FindingsTable";
-import Header from "../components/Header";
+import DashboardSection from "../components/DashboardSection";
 import SecurityScoreGauge from "../components/SecurityScoreGauge";
 
 import SeverityChart from "../components/charts/SeverityChart";
@@ -25,8 +32,17 @@ function Dashboard() {
   const [findings, setFindings] =
     useState<any[]>([]);
 
-  const [resourceStats, setResourceStats] =
+  const [resourceStats,
+    setResourceStats] =
     useState<any[]>([]);
+
+  const [severityFilter,
+    setSeverityFilter] =
+    useState("ALL");
+
+  const [searchText,
+    setSearchText] =
+    useState("");
 
   const loadData = async () => {
 
@@ -55,25 +71,33 @@ function Dashboard() {
           ]
       );
 
-      const resourceData = Object.entries(
-        findingsData.reduce(
-          (acc: any, finding: any) => {
+      const resourceData =
+        Object.entries(
 
-            const resource =
-              finding.resource_type;
+          findingsData.reduce(
+            (
+              acc: any,
+              finding: any
+            ) => {
 
-            acc[resource] =
-              (acc[resource] || 0) + 1;
+              const resource =
+                finding.resource_type;
 
-            return acc;
+              acc[resource] =
+                (acc[resource] || 0) + 1;
 
-          },
-          {}
-        )
-      ).map(([resource, count]) => ({
-        resource,
-        count
-      }));
+              return acc;
+
+            },
+            {}
+          )
+
+        ).map(
+          ([resource, count]) => ({
+            resource,
+            count
+          })
+        );
 
       setSummary(summaryData);
       setFindings(findingsData);
@@ -105,33 +129,65 @@ function Dashboard() {
 
     return (
       <Container>
-        <Typography>
-          Loading...
-        </Typography>
+        Loading...
       </Container>
     );
-
   }
+
+  const filteredFindings =
+    findings.filter(
+      (finding: any) => {
+
+        const severityMatch =
+          severityFilter === "ALL"
+            ? true
+            : finding.severity ===
+              severityFilter;
+
+        const searchMatch =
+
+          finding.title
+            .toLowerCase()
+            .includes(
+              searchText.toLowerCase()
+            )
+
+          ||
+
+          finding.resource_id
+            .toLowerCase()
+            .includes(
+              searchText.toLowerCase()
+            )
+
+          ||
+
+          finding.resource_type
+            .toLowerCase()
+            .includes(
+              searchText.toLowerCase()
+            );
+
+        return (
+          severityMatch &&
+          searchMatch
+        );
+      }
+    );
 
   return (
 
     <Container
       maxWidth="xl"
-      sx={{ mt: 4, mb: 6 }}
+      sx={{
+        mt: 4,
+        mb: 6
+      }}
     >
 
       <Header />
 
-      <Typography
-        variant="body2"
-        sx={{ mb: 3 }}
-      >
-        Last Updated:
-        {" "}
-        {new Date().toLocaleString()}
-      </Typography>
-
-      {/* Top Dashboard Row */}
+      {/* TOP ROW */}
 
       <Grid
         container
@@ -144,11 +200,8 @@ function Dashboard() {
           md={4}
         >
 
-          <Paper
-            sx={{
-              p: 3,
-              height: "100%"
-            }}
+          <DashboardSection
+            title="Security Score"
           >
 
             <SecurityScoreGauge
@@ -157,7 +210,7 @@ function Dashboard() {
               }
             />
 
-          </Paper>
+          </DashboardSection>
 
         </Grid>
 
@@ -167,18 +220,9 @@ function Dashboard() {
           md={8}
         >
 
-          <Paper
-            sx={{
-              p: 2
-            }}
+          <DashboardSection
+            title="Severity Distribution"
           >
-
-            <Typography
-              variant="h6"
-              gutterBottom
-            >
-              Severity Distribution
-            </Typography>
 
             <SeverityChart
               critical={
@@ -195,93 +239,160 @@ function Dashboard() {
               }
             />
 
-          </Paper>
+          </DashboardSection>
 
         </Grid>
 
       </Grid>
 
-      {/* Summary Cards */}
+      {/* METRIC CARDS */}
 
       <Grid
         container
         spacing={3}
-        sx={{ mt: 1 }}
+        sx={{
+          mt: 2,
+          mb: 4
+        }}
       >
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={2}>
           <MetricCard
             title="Critical"
             value={summary.critical}
           />
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={2}>
           <MetricCard
             title="High"
             value={summary.high}
           />
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={2}>
           <MetricCard
             title="Medium"
             value={summary.medium}
           />
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={2}>
           <MetricCard
             title="Low"
             value={summary.low}
           />
         </Grid>
 
+        <Grid item xs={12} md={4}>
+          <MetricCard
+            title="Total Findings"
+            value={
+              summary.total_findings
+            }
+          />
+        </Grid>
+
       </Grid>
 
-      {/* Resource Analytics */}
+      {/* RESOURCE CHART */}
 
-      <Paper
-        sx={{
-          mt: 4,
-          p: 2
-        }}
-      >
+      <Box sx={{ mt: 5 }}>
 
-        <Typography
-          variant="h6"
-          gutterBottom
+        <DashboardSection
+          title="Findings by Resource Type"
         >
-          Findings by Resource Type
-        </Typography>
 
-        <ResourceChart
-          data={resourceStats}
-        />
+          <ResourceChart
+            data={resourceStats}
+          />
 
-      </Paper>
+        </DashboardSection>
 
-      {/* Findings Table */}
+      </Box>
 
-      <Paper
-        sx={{
-          mt: 4,
-          p: 2
-        }}
-      >
+      {/* FINDINGS TABLE */}
 
-        <Typography
-          variant="h6"
-          gutterBottom
+      <Box sx={{ mt: 4 }}>
+
+        <DashboardSection
+          title="Recent Findings"
         >
-          Recent Findings
-        </Typography>
 
-        <FindingsTable
-          findings={findings}
-        />
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              mb: 3
+            }}
+          >
 
-      </Paper>
+            <TextField
+              fullWidth
+              label="Search Findings"
+              value={searchText}
+              onChange={(e) =>
+                setSearchText(
+                  e.target.value
+                )
+              }
+            />
+
+            <FormControl
+              sx={{
+                minWidth: 220
+              }}
+            >
+
+              <InputLabel>
+                Severity Filter
+              </InputLabel>
+
+              <Select
+                value={severityFilter}
+                label="Severity Filter"
+                onChange={(e) =>
+                  setSeverityFilter(
+                    e.target.value
+                  )
+                }
+              >
+
+                <MenuItem value="ALL">
+                  All
+                </MenuItem>
+
+                <MenuItem value="CRITICAL">
+                  Critical
+                </MenuItem>
+
+                <MenuItem value="HIGH">
+                  High
+                </MenuItem>
+
+                <MenuItem value="MEDIUM">
+                  Medium
+                </MenuItem>
+
+                <MenuItem value="LOW">
+                  Low
+                </MenuItem>
+
+              </Select>
+
+            </FormControl>
+
+          </Box>
+
+          <FindingsTable
+            findings={
+              filteredFindings
+            }
+          />
+
+        </DashboardSection>
+
+      </Box>
 
     </Container>
 
