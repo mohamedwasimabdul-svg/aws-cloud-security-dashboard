@@ -1,7 +1,8 @@
 import json
 
 from services.findings_query_service import (
-    get_all_findings
+    get_all_findings,
+    get_historical_findings
 )
 
 from services.summary_service import (
@@ -28,12 +29,17 @@ def handler(event, context):
 
     if path == "/findings":
 
-        return build_response(
-            get_all_findings()
-        )
+     return build_response(
+        get_all_findings()
+    )
+
+    elif path == "/history":
+
+     return build_response(
+        get_historical_findings()
+    )
 
     elif path == "/summary":
-
         return build_response(
             get_summary()
         )

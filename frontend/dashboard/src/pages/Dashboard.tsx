@@ -23,7 +23,8 @@ import ResourceChart from "../components/charts/ResourceChart";
 
 import {
   getSummary,
-  getFindings
+  getFindings,
+  getHistory
 } from "../api/securityApi";
 
 function Dashboard() {
@@ -37,6 +38,10 @@ function Dashboard() {
   const [resourceStats,
     setResourceStats] =
     useState<any[]>([]);
+
+  const [historyCount,
+    setHistoryCount] =
+    useState(0);
 
   const [severityFilter,
     setSeverityFilter] =
@@ -59,6 +64,9 @@ function Dashboard() {
 
       const findingsData =
         await getFindings();
+
+      const historyData =
+        await getHistory();
 
       const severityRank = {
         CRITICAL: 1,
@@ -106,6 +114,10 @@ function Dashboard() {
       setSummary(summaryData);
       setFindings(findingsData);
       setResourceStats(resourceData);
+
+      setHistoryCount(
+        historyData.length
+      );
 
       setLastUpdated(
         new Date().toLocaleString()
@@ -283,12 +295,19 @@ function Dashboard() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <MetricCard
-            title="Total Findings"
+            title="Active Findings"
             value={
               summary.total_findings
             }
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          <MetricCard
+            title="Historical Findings"
+            value={historyCount}
           />
         </Grid>
 

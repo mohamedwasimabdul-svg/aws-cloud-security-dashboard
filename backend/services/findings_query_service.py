@@ -7,11 +7,26 @@ dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(TABLE_NAME)
 
 
-def get_all_findings():
+def get_historical_findings():
 
     response = table.scan()
 
     findings = response.get("Items", [])
+
+    findings.sort(
+        key=lambda x: x.get(
+            "created_at",
+            ""
+        ),
+        reverse=True
+    )
+
+    return findings
+
+
+def get_all_findings():
+
+    findings = get_historical_findings()
 
     latest_findings = {}
 
@@ -27,32 +42,6 @@ def get_all_findings():
 
             latest_findings[key] = finding
 
-        else:
-
-            current_time = (
-                latest_findings[key]
-                .get("created_at", "")
-            )
-
-            new_time = (
-                finding
-                .get("created_at", "")
-            )
-
-            if new_time > current_time:
-
-                latest_findings[key] = finding
-
-    active_findings = list(
+    return list(
         latest_findings.values()
     )
-
-    active_findings.sort(
-        key=lambda x: x.get(
-            "created_at",
-            ""
-        ),
-        reverse=True
-    )
-
-    return active_findings
