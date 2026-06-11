@@ -45,3 +45,7 @@ output "api_lambda_arn" {
 output "api_url" {
   value = module.api_gateway.invoke_url
 }
+
+output "frontend_website_url" {
+  value = module.frontend_hosting.website_endpoint
+}

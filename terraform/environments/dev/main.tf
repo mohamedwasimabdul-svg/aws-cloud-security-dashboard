@@ -76,3 +76,10 @@ module "api_gateway" {
 
   lambda_name = module.api_lambda.lambda_name
 }
+
+module "frontend_hosting" {
+
+  source = "../../modules/frontend_hosting"
+
+  bucket_name = "cloud-security-dashboard-dev-frontend-386785029743"
+}
