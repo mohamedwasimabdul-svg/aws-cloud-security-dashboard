@@ -13,6 +13,7 @@ import type { Finding } from "../types/security";
 
 interface Props {
   findings: Finding[];
+  showHistoryColumns?: boolean;
 }
 
 const getSeverityColor = (
@@ -38,6 +39,49 @@ const getSeverityColor = (
   }
 };
 
+const formatDate = (
+  timestamp: string
+) => {
+
+  return new Date(
+    timestamp
+  ).toLocaleString();
+};
+
+const getAge = (
+  timestamp: string
+) => {
+
+  const created =
+    new Date(timestamp);
+
+  const now =
+    new Date();
+
+  const diffMs =
+    now.getTime() -
+    created.getTime();
+
+  const diffHours =
+    Math.floor(
+      diffMs /
+      (1000 * 60 * 60)
+    );
+
+  const diffDays =
+    Math.floor(
+      diffHours / 24
+    );
+
+  if (diffDays > 0) {
+
+    return `${diffDays} day(s)`;
+
+  }
+
+  return `${diffHours} hour(s)`;
+};
+
 function FindingsTable({
   findings
 }: Props) {
@@ -47,7 +91,7 @@ function FindingsTable({
     <TableContainer
       component={Paper}
       sx={{
-        maxHeight: 500,
+        maxHeight: 600,
         borderRadius: 2
       }}
     >
@@ -58,23 +102,59 @@ function FindingsTable({
 
           <TableRow>
 
-            <TableCell sx={{ fontWeight: "bold" }}>
+            <TableCell
+              sx={{
+                fontWeight: "bold"
+              }}
+            >
+              First Seen
+            </TableCell>
+
+            <TableCell
+              sx={{
+                fontWeight: "bold"
+              }}
+            >
+              Age
+            </TableCell>
+
+            <TableCell
+              sx={{
+                fontWeight: "bold"
+              }}
+            >
               Severity
             </TableCell>
 
-            <TableCell sx={{ fontWeight: "bold" }}>
+            <TableCell
+              sx={{
+                fontWeight: "bold"
+              }}
+            >
               Resource Type
             </TableCell>
 
-            <TableCell sx={{ fontWeight: "bold" }}>
+            <TableCell
+              sx={{
+                fontWeight: "bold"
+              }}
+            >
               Resource ID
             </TableCell>
 
-            <TableCell sx={{ fontWeight: "bold" }}>
+            <TableCell
+              sx={{
+                fontWeight: "bold"
+              }}
+            >
               Title
             </TableCell>
 
-            <TableCell sx={{ fontWeight: "bold" }}>
+            <TableCell
+              sx={{
+                fontWeight: "bold"
+              }}
+            >
               Description
             </TableCell>
 
@@ -89,17 +169,38 @@ function FindingsTable({
 
               <TableRow
                 hover
-                key={finding.finding_id}
+                key={
+                  finding.finding_id
+                }
               >
+
+                <TableCell>
+                  {
+                    formatDate(
+                      finding.created_at
+                    )
+                  }
+                </TableCell>
+
+                <TableCell>
+                  {
+                    getAge(
+                      finding.created_at
+                    )
+                  }
+                </TableCell>
 
                 <TableCell>
 
                   <Chip
-                    label={finding.severity}
+                    label={
+                      finding.severity
+                    }
                     size="small"
                     sx={{
                       color: "white",
-                      fontWeight: "bold",
+                      fontWeight:
+                        "bold",
                       backgroundColor:
                         getSeverityColor(
                           finding.severity
@@ -110,15 +211,21 @@ function FindingsTable({
                 </TableCell>
 
                 <TableCell>
-                  {finding.resource_type}
+                  {
+                    finding.resource_type
+                  }
                 </TableCell>
 
                 <TableCell>
-                  {finding.resource_id}
+                  {
+                    finding.resource_id
+                  }
                 </TableCell>
 
                 <TableCell>
-                  {finding.title}
+                  {
+                    finding.title
+                  }
                 </TableCell>
 
                 <TableCell
@@ -126,7 +233,9 @@ function FindingsTable({
                     maxWidth: 400
                   }}
                 >
-                  {finding.description}
+                  {
+                    finding.description
+                  }
                 </TableCell>
 
               </TableRow>

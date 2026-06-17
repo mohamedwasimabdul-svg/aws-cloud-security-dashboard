@@ -20,6 +20,7 @@ import SecurityScoreGauge from "../components/SecurityScoreGauge";
 
 import SeverityChart from "../components/charts/SeverityChart";
 import ResourceChart from "../components/charts/ResourceChart";
+import TrendChart from "../components/charts/TrendChart";
 
 import {
   getSummary,
@@ -39,8 +40,20 @@ function Dashboard() {
     setResourceStats] =
     useState<any[]>([]);
 
+  const [trendData,
+    setTrendData] =
+    useState<any[]>([]);
+
   const [historyCount,
     setHistoryCount] =
+    useState(0);
+
+  const [last7DaysCount,
+    setLast7DaysCount] =
+    useState(0);
+
+  const [last30DaysCount,
+    setLast30DaysCount] =
     useState(0);
 
   const [severityFilter,
@@ -111,12 +124,90 @@ function Dashboard() {
           })
         );
 
+      const trendMap:
+        Record<string, number> = {};
+
+      historyData.forEach(
+        (finding: any) => {
+
+          const date =
+            finding.created_at
+              .split("T")[0];
+
+          trendMap[date] =
+            (trendMap[date] || 0) + 1;
+
+        }
+      );
+
+      const trendChartData =
+        Object.entries(
+          trendMap
+        )
+        .map(
+          ([date, count]) => ({
+            date,
+            count
+          })
+        )
+        .sort(
+          (a, b) =>
+            a.date.localeCompare(
+              b.date
+            )
+        );
+
+      const now =
+        new Date();
+
+      const sevenDaysAgo =
+        new Date();
+
+      sevenDaysAgo.setDate(
+        now.getDate() - 7
+      );
+
+      const thirtyDaysAgo =
+        new Date();
+
+      thirtyDaysAgo.setDate(
+        now.getDate() - 30
+      );
+
+      const findings7Days =
+        historyData.filter(
+          (f: any) =>
+            new Date(
+              f.created_at
+            ) >= sevenDaysAgo
+        ).length;
+
+      const findings30Days =
+        historyData.filter(
+          (f: any) =>
+            new Date(
+              f.created_at
+            ) >= thirtyDaysAgo
+        ).length;
+
       setSummary(summaryData);
       setFindings(findingsData);
       setResourceStats(resourceData);
 
+      setTrendData(
+        trendChartData
+      );
+
       setHistoryCount(
         historyData.length
+      );
+
+      setLast7DaysCount(
+        findings7Days
+      );
+
+      setLast30DaysCount(
+        findings30Days
       );
 
       setLastUpdated(
@@ -268,39 +359,25 @@ function Dashboard() {
       >
 
         <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-          <MetricCard
-            title="Critical"
-            value={summary.critical}
-          />
+          <MetricCard title="Critical" value={summary.critical} />
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-          <MetricCard
-            title="High"
-            value={summary.high}
-          />
+          <MetricCard title="High" value={summary.high} />
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-          <MetricCard
-            title="Medium"
-            value={summary.medium}
-          />
+          <MetricCard title="Medium" value={summary.medium} />
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6, md: 2 }}>
-          <MetricCard
-            title="Low"
-            value={summary.low}
-          />
+          <MetricCard title="Low" value={summary.low} />
         </Grid>
 
         <Grid size={{ xs: 12, sm: 6, md: 2 }}>
           <MetricCard
             title="Active Findings"
-            value={
-              summary.total_findings
-            }
+            value={summary.total_findings}
           />
         </Grid>
 
@@ -308,6 +385,30 @@ function Dashboard() {
           <MetricCard
             title="Historical Findings"
             value={historyCount}
+          />
+        </Grid>
+
+      </Grid>
+
+      <Grid
+        container
+        spacing={3}
+        sx={{
+          mb: 6
+        }}
+      >
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <MetricCard
+            title="Findings Last 7 Days"
+            value={last7DaysCount}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <MetricCard
+            title="Findings Last 30 Days"
+            value={last30DaysCount}
           />
         </Grid>
 
@@ -321,6 +422,20 @@ function Dashboard() {
 
           <ResourceChart
             data={resourceStats}
+          />
+
+        </DashboardSection>
+
+      </Box>
+
+      <Box sx={{ mt: 5 }}>
+
+        <DashboardSection
+          title="Security Trend"
+        >
+
+          <TrendChart
+            data={trendData}
           />
 
         </DashboardSection>
@@ -377,25 +492,11 @@ function Dashboard() {
                 }
               >
 
-                <MenuItem value="ALL">
-                  All
-                </MenuItem>
-
-                <MenuItem value="CRITICAL">
-                  Critical
-                </MenuItem>
-
-                <MenuItem value="HIGH">
-                  High
-                </MenuItem>
-
-                <MenuItem value="MEDIUM">
-                  Medium
-                </MenuItem>
-
-                <MenuItem value="LOW">
-                  Low
-                </MenuItem>
+                <MenuItem value="ALL">All</MenuItem>
+                <MenuItem value="CRITICAL">Critical</MenuItem>
+                <MenuItem value="HIGH">High</MenuItem>
+                <MenuItem value="MEDIUM">Medium</MenuItem>
+                <MenuItem value="LOW">Low</MenuItem>
 
               </Select>
 
