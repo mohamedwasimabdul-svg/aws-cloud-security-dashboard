@@ -64,28 +64,41 @@ function Header() {
 >
 
   <Button
-    component={Link}
-    to="/"
-    variant={
-      location.pathname === "/"
-        ? "contained"
-        : "outlined"
-    }
-  >
-    Dashboard
-  </Button>
+  component={Link}
+  to="/"
+  variant={
+    location.pathname === "/"
+      ? "contained"
+      : "outlined"
+  }
+>
+  Dashboard
+</Button>
 
-  <Button
-    component={Link}
-    to="/history"
-    variant={
-      location.pathname === "/history"
-        ? "contained"
-        : "outlined"
-    }
-  >
-    Historical Findings
-  </Button>
+<Button
+  component={Link}
+  to="/history"
+  variant={
+    location.pathname === "/history"
+      ? "contained"
+      : "outlined"
+  }
+>
+  Historical Findings
+</Button>
+
+<Button
+  component={Link}
+  to="/lifecycle"
+  variant={
+    location.pathname ===
+    "/lifecycle"
+      ? "contained"
+      : "outlined"
+  }
+>
+  Lifecycle Findings
+</Button>
 
 </Box>
 

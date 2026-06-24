@@ -9,6 +9,10 @@ from services.summary_service import (
     get_summary
 )
 
+from services.lifecycle_service import (
+    get_lifecycle
+)
+
 
 def build_response(data):
 
@@ -43,6 +47,15 @@ def handler(event, context):
 
         return build_response(
             get_historical_findings()
+        )
+
+    #
+    # Lifecycle Endpoint
+    #
+    elif path == "/lifecycle":
+
+        return build_response(
+            get_lifecycle()
         )
 
     #

@@ -6,6 +6,7 @@ const api = axios.create({
 });
 
 export const getSummary = async () => {
+
   const response =
     await api.get("/summary");
 
@@ -13,6 +14,7 @@ export const getSummary = async () => {
 };
 
 export const getFindings = async () => {
+
   const response =
     await api.get("/findings");
 
@@ -20,8 +22,19 @@ export const getFindings = async () => {
 };
 
 export const getHistory = async () => {
+
   const response =
     await api.get("/history");
 
   return response.data;
 };
+
+export const getLifecycle = async () => {
+
+  const response =
+    await api.get("/lifecycle");
+
+  return response.data;
+};
+
+export default api;
